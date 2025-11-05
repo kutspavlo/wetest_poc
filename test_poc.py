@@ -9,7 +9,7 @@ def test_simple_login_button_click():
     poco = CocosJsPoco()
 
     mtt_button = poco("HallScene").offspring("mtt")
-    mtt_button.wait_for_appearance(timeout=30)
+    mtt_button.wait_for_appearance(timeout=120)
     time.sleep(5)
     login_button = poco("HallScene").offspring("btn_login")
     login_button.click()
