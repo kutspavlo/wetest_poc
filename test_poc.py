@@ -6,7 +6,7 @@ def test_simple_login_button_click():
     # connect_device("Android:///")
     poco = CocosJsPoco()
 
-    login_button = poco("HallScene").offspring("btn_login")
+    login_button = poco("HallScene").offspring("btn_login").offspring("lbl_login")
     login_button.wait_for_appearance(timeout=120)
     login_button.click()
 
