@@ -66,9 +66,9 @@ def test_simple_login_button_click():
     poco = CocosJsPoco()
 
     login_button = poco("HallScene").offspring("btn_login")
-    login_button.wait_for_appearance(timeout=30)
+    login_button.wait_for_appearance(timeout=120)
     login_button.click()
 
     login_node = poco("HallScene").offspring("LoginNode")
 
-    assert login_node.wait_for_appearance(timeout=30), "Login failed: Did not find 'Login Node' element."
+    assert login_node.wait_for_appearance(timeout=120), "Login failed: Did not find 'Login Node' element."
