@@ -58,3 +58,5 @@ def test_login():
 
     balance_icon = poco("HallScene").offspring("gold_Panel")
     assert balance_icon.exists(), "Balance is not visible, login failed"
+
+    time.sleep(10)
