@@ -6,7 +6,7 @@ from poco.drivers.cocosjs import CocosJsPoco
 from adb_util import adb_type_text, adb_press_enter
 
 
-def test_simple_login_button_click():
+def test_login():
     connect_device("Android:///")
     poco = CocosJsPoco()
 
@@ -22,18 +22,15 @@ def test_simple_login_button_click():
 
     assert login_node.exists(), "Login failed: Did not find 'Login Node' element."
 
-    # 6. Now, try to interact with the fields
     email_field = poco("HallScene").offspring("username_input").offspring("bg")
     password_field = poco("HallScene").offspring("password_input").offspring("bg")
 
-    # --- Human-Like Email Click ---
     email_field.wait_for_appearance(timeout=10)
     email_field.click()
     time.sleep(2)
     adb_type_text("dreambel@icloud.com")
     adb_press_enter()
 
-    # --- Human-Like Password Click ---
     password_field.wait_for_appearance(timeout=10)
     password_field.click()
     time.sleep(2)
@@ -54,3 +51,10 @@ def test_simple_login_button_click():
     android_poco("android.widget.FrameLayout").child("android.widget.LinearLayout").offspring("Navigate up").click()
 
     time.sleep(10)
+
+    promo_button_close = poco("HallScene").offspring("Button_Close")
+    if promo_button_close.exists():
+        promo_button_close.click()
+
+    balance_icon = poco("HallScene").offspring("gold_Panel")
+    assert balance_icon.exists(), "Balance is not visible, login failed"
