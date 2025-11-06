@@ -1,12 +1,12 @@
-import random
 import time
 
-from airtest.core.api import connect_device, text
+from airtest.core.api import connect_device
 from poco.drivers.cocosjs import CocosJsPoco
+from adb_util import adb_type_text, adb_press_enter
 
 
 def test_simple_login_button_click():
-    # connect_device("Android:///")
+    connect_device("Android:///")
     poco = CocosJsPoco()
 
     mtt_button = poco("HallScene").offspring("mtt")
@@ -29,15 +29,17 @@ def test_simple_login_button_click():
     email_field.wait_for_appearance(timeout=10)
     email_field.click()
     time.sleep(2)
-    text("dreambel@icloud.com")
+    adb_type_text("dreambel@icloud.com")
+    adb_press_enter()
 
     # --- Human-Like Password Click ---
     password_field.wait_for_appearance(timeout=10)
     password_field.click()
     time.sleep(2)
+    adb_type_text("Pavelrew22011991")
+    time.sleep(2)
+    adb_press_enter()
 
-    text("Pavelrew22011991")
-    password_field.click()
 
     captcha_checkbox = poco("HallScene").offspring("Captcha")
     captcha_checkbox.click()
