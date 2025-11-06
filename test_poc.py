@@ -1,3 +1,4 @@
+import random
 import time
 
 from airtest.core.api import connect_device, text
@@ -16,20 +17,32 @@ def test_simple_login_button_click():
 
     login_node = poco("HallScene").offspring("LoginNode")
     login_node.wait_for_appearance(timeout=120)
-    time.sleep(5)
+    time.sleep(15)
 
     assert login_node.exists(), "Login failed: Did not find 'Login Node' element."
 
-    # 2. Define the input fields
-    email_field = poco("HallScene").offspring("username_input").offspring("text")
-    password_field = poco("HallScene").offspring("password_input").offspring("text")
+    # 6. Now, try to interact with the fields
+    email_field = poco("HallScene").offspring("username_input").offspring("bg")
+    password_field = poco("HallScene").offspring("password_input").offspring("bg")
 
-    # 3. Wait for email field, THEN click and type
-    email_field.wait_for_appearance(timeout=30)
+    # --- Human-Like Email Click ---
+    email_field.wait_for_appearance(timeout=10)
     email_field.click()
+    time.sleep(2)
     text("dreambel@icloud.com")
 
-    # 4. Wait for password field, THEN click and type
-    password_field.wait_for_appearance(timeout=30)
+    # --- Human-Like Password Click ---
+    password_field.wait_for_appearance(timeout=10)
     password_field.click()
-    text("Pavelrew22011991!")
+    time.sleep(2)
+
+    text("Pavelrew22011991")
+    password_field.click()
+
+    captcha_checkbox = poco("HallScene").offspring("Captcha")
+    captcha_checkbox.click()
+    time.sleep(10)
+
+    login_button_confirm = poco("HallScene").offspring("login_button")
+    login_button_confirm.click()
+    time.sleep(20)
