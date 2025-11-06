@@ -1,6 +1,7 @@
 import time
 
 from airtest.core.api import connect_device
+from poco.drivers.android.uiautomation import AndroidUiautomationPoco
 from poco.drivers.cocosjs import CocosJsPoco
 from adb_util import adb_type_text, adb_press_enter
 
@@ -47,4 +48,9 @@ def test_simple_login_button_click():
 
     login_button_confirm = poco("HallScene").offspring("login_button")
     login_button_confirm.click()
-    time.sleep(20)
+    time.sleep(10)
+
+    android_poco = AndroidUiautomationPoco()
+    android_poco("android.widget.FrameLayout").child("android.widget.LinearLayout").offspring("Navigate up").click()
+
+    time.sleep(10)
