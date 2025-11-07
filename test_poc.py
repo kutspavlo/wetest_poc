@@ -14,11 +14,12 @@ def test_login():
     mtt_button.wait_for_appearance(timeout=120)
     time.sleep(5)
     login_button = poco("HallScene").offspring("btn_login")
+    login_button.wait_for_appearance(timeout=120)
     login_button.click()
 
     login_node = poco("HallScene").offspring("LoginNode")
     login_node.wait_for_appearance(timeout=120)
-    time.sleep(15)
+    time.sleep(5)
 
     assert login_node.exists(), "Login failed: Did not find 'Login Node' element."
 
@@ -33,9 +34,9 @@ def test_login():
 
     password_field.wait_for_appearance(timeout=10)
     password_field.click()
-    time.sleep(2)
+    # time.sleep(2)
     adb_type_text("Pavelrew22011991")
-    time.sleep(2)
+    time.sleep(3)
     adb_press_enter()
 
 
