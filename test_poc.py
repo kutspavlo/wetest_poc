@@ -36,7 +36,7 @@ def test_login():
     password_field.click()
     # time.sleep(2)
     adb_type_text("Pavelrew22011991")
-    # time.sleep(2)
+    time.sleep(3)
     adb_press_enter()
 
 
