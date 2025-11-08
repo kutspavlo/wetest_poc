@@ -1,3 +1,5 @@
+import time
+
 from pom.base_page import BasePage
 
 
@@ -23,6 +25,7 @@ class HallPage(BasePage):
     def click_login_button(self):
         """Clicks the main login button to open the login modal."""
         print("Clicking main login button...")
+        time.sleep(2)
         self.click_element(self.LOGIN_BUTTON)
 
     def close_promo_if_present(self):
