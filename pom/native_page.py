@@ -1,10 +1,10 @@
 from pom.base_page import BasePage
 
+
 class NativePage(BasePage):
     """Page Object for native Android UI elements."""
 
     # --- Locators ---
-    # This locator is very brittle. An ID is much better.
     NAVIGATE_UP_BUTTON = ("android.widget.FrameLayout", "android.widget.LinearLayout", "Navigate up")
 
     def __init__(self, poco):
@@ -14,5 +14,4 @@ class NativePage(BasePage):
     def click_navigate_up(self):
         """Clicks the native 'Navigate up' button."""
         print("Clicking native 'Navigate up' button...")
-        # We expect this to appear quickly
         self.click_element(self.NAVIGATE_UP_BUTTON, timeout=15)

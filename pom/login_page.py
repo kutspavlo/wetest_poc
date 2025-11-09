@@ -39,13 +39,11 @@ class LoginPage(BasePage):
     def click_captcha(self):
         """
         Clicks the captcha checkbox.
-        NOTE: Real automation of captcha is complex/not recommended.
-        This assumes clicking it is enough, or a dev build disables it.
         """
         print("Clicking captcha checkbox...")
+        time.sleep(5)
         self.click_element(self.CAPTCHA_CHECKBOX)
-        # The long wait for manual solving is moved to the test logic
-        # if it's truly necessary. Here, we just click.
+        time.sleep(5)
 
     def click_confirm_login(self):
         """Clicks the final login button on the modal."""
@@ -57,7 +55,5 @@ class LoginPage(BasePage):
         self.wait_for_login_modal()
         self.enter_email(email)
         self.enter_password(password)
-        time.sleep(5)
         self.click_captcha()
-        time.sleep(5)
         self.click_confirm_login()
