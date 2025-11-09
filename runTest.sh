@@ -9,6 +9,6 @@ echo "--- 2. Installing Dependencies (using pip3) ---"
 pip3 install -r requirements.txt
 
 echo "--- 3. Running Pytest (using python3 -m) ---"
-python3 -m pytest test_poc.py
+python3 -m pytest
 
 echo "--- Test execution finished ---"
