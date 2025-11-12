@@ -1,0 +1,14 @@
+# This file is in the root of your Bitbucket repo
+# bitbucket-pipelines.yml
+
+pipelines:
+  default: # This will run on every push to any branch
+    - step:
+        name: Sync to GitHub Mirror
+        image: alpine/git:latest
+        script:
+          # 1. Add your GitHub repo as a new 'remote' called 'mirror'
+          - git remote add mirror git@github.com:kutspavlo/wetest_poc.git
+          
+          # 2. Push all branches and tags from the local repo to the 'mirror' remote
+          - git push --mirror mirror
