@@ -1,5 +1,3 @@
-# This file is in the root of your Bitbucket repo
-# bitbucket-pipelines.yml
 
 pipelines:
   default:
@@ -9,7 +7,6 @@ pipelines:
         clone:
           depth: full 
         script:
-          - git fetch --all --prune
+          - git fetch --all --prune --tags
           - git remote add mirror git@github.com:kutspavlo/wetest_poc.git || true
-          - git push mirror --force 'refs/remotes/origin/*:refs/heads/*'
-          - git push mirror --tags --force
+          - git push mirror --force --prune 'refs/remotes/origin/*:refs/heads/*' 'refs/tags/*:refs/tags/*'
