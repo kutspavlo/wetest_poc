@@ -5,7 +5,7 @@ from pom.native_page import NativePage
 
 
 @pytest.mark.login
-def test_user_login(cocos_poco, android_poco, test_credentials):
+def test_user_login(cocos_poco, android_poco, test_credentials, get_device_os):
     """
     Test case for a successful user login.
 
@@ -33,7 +33,8 @@ def test_user_login(cocos_poco, android_poco, test_credentials):
     )
 
     # 5. Handle the native "Navigate Up" action
-    native_page.click_navigate_up()
+    if get_device_os == "android":
+        native_page.click_navigate_up()
 
     # 6. Handle post-login popups
     hall_page.close_promo_if_present()
