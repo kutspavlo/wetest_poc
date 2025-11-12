@@ -39,13 +39,13 @@ def cocos_poco():
 
 
 @pytest.fixture(scope="function")
-def android_poco():
+def android_poco(get_device_os):
     """
     Fixture to initialize the native AndroidUiautomationPoco driver.
     It's "function" scoped to be available when needed.
     """
     # This assumes the device is already connected by the `cocos_poco` fixture
-    if get_device_os() == "android":
+    if get_device_os == "android":
         poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
         yield poco
 
@@ -56,7 +56,4 @@ def get_device_os():
     Fixture to detect current device OS
     """
     platform = device().platform
-    print("@@@@@@@@@@")
-    print(platform)
-    print("@@@@@@@@@@")
     return platform
