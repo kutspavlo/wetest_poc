@@ -1,0 +1,16 @@
+# This file is in the root of your Bitbucket repo
+# bitbucket-pipelines.yml
+
+pipelines:
+  default: # This will run on every push to any branch
+    - step:
+        name: Sync to GitHub Mirror
+        image: alpine/git:latest
+        clone:
+          enabled: false # We will do a custom bare clone
+        script:
+          # Clone the Bitbucket repo (source)
+          - git clone --bare git@bitbucket.org:a5-labs/ui_tests.git
+          - cd ui_tests.git
+          # Push to the GitHub repo (destination)
+          - git push --mirror git@github.com:kutspavlo/wetest_poc.git
