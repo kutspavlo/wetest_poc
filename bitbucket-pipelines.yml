@@ -6,11 +6,12 @@ pipelines:
     - step:
         name: Sync to GitHub Mirror
         image: alpine/git:latest
-        clone:
-          enabled: false # We will do a custom bare clone
+        # We are NOW using the default clone (clone: enabled: true)
+        # So Bitbucket automatically fetches the code.
         script:
-          # Clone the Bitbucket repo (source)
-          - git clone --bare git@bitbucket.org:a5-labs/ui_tests.git
-          - cd ui_tests.git
-          # Push to the GitHub repo (destination)
-          - git push --mirror git@github.com:kutspavlo/wetest_poc.git
+          # 1. Add your GitHub repo as a new 'remote' called 'mirror'
+          #    This uses the GitHub SSH key you already set up.
+          - git remote add mirror git@github.com:YOUR_USERNAME/YOUR_GITHUB_REPO.git
+          
+          # 2. Push all branches and tags from the local repo to the 'mirror' remote
+          - git push --mirror mirror
