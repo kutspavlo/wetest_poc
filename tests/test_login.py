@@ -54,4 +54,4 @@ def test_user_login(cocos_poco, android_poco, test_credentials):
     hall_page.click_navigate_back_button()
     hall_page.click_global_spins()
     hall_page.click_navigate_back_button()
-    # test pipeline mirror2
+    # test pipeline mirror6
