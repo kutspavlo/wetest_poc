@@ -11,4 +11,5 @@ pipelines:
         script:
           - git fetch --all --prune
           - git remote add mirror git@github.com:kutspavlo/wetest_poc.git || true
-          - git push --mirror mirror
+          - git push mirror --force 'refs/remotes/origin/*:refs/heads/*'
+          - git push mirror --tags --force
