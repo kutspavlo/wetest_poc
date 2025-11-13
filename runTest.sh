@@ -9,9 +9,7 @@ echo "--- 2. Installing Dependencies (using pip3) ---"
 pip3 install -r requirements.txt
 
 echo "--- 3. Running Pytest (using python3 -m) ---"
-echo $CASE_NAME
 echo $CASE_FUNC
-TEST_PATH="tests/${CASE_NAME}"
-python3 -m pytest --capture=no "$TEST_PATH"
+python3 -m pytest tests/ -k "$CASE_FUNC" --capture=no
 
 echo "--- Test execution finished ---"
