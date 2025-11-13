@@ -5,7 +5,7 @@ from pom.native_page import NativePage
 
 
 @pytest.mark.login
-def test_poker_navigation(cocos_poco, android_poco, test_credentials, get_device_os):
+def test_user_login(cocos_poco, android_poco, test_credentials, get_device_os):
     """
     Test case for a successful user login.
 
@@ -41,6 +41,19 @@ def test_poker_navigation(cocos_poco, android_poco, test_credentials, get_device
 
     # 7. Final Assertion: Verify login was successful
     assert hall_page.is_balance_visible(), "Login failed: Balance icon was not found."
+
+
+@pytest.mark.login
+def test_poker_navigation(cocos_poco, android_poco, test_credentials, get_device_os):
+    """
+    Test case for a successful poker games navigation.
+
+    Fixtures:
+    - cocos_poco: Provides the initialized CocosJS driver.
+    """
+
+
+    hall_page = HallPage(cocos_poco)
 
     hall_page.click_mtt()
     hall_page.click_navigate_back_button()
