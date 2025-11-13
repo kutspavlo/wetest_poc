@@ -42,7 +42,11 @@ def test_user_login(cocos_poco, android_poco, test_credentials, get_device_os):
     # 7. Final Assertion: Verify login was successful
     assert hall_page.is_balance_visible(), "Login failed: Balance icon was not found."
 
-    # 8. Navigate and varify various game types
+
+@pytest.mark.login
+def test_poker_games_navigation(cocos_poco):
+    hall_page = HallPage(cocos_poco)
+
     hall_page.click_mtt()
     hall_page.click_navigate_back_button()
     hall_page.click_nlhe()
@@ -55,4 +59,3 @@ def test_user_login(cocos_poco, android_poco, test_credentials, get_device_os):
     hall_page.click_navigate_back_button()
     hall_page.click_global_spins()
     hall_page.click_navigate_back_button()
-    # test pipeline mirror6
