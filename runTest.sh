@@ -3,7 +3,6 @@
 export TESTMO_URL="https://YOUR-INSTANCE.testmo.net"
 export TESTMO_TOKEN="YOUR_SECRET_API_TOKEN_HERE"
 
-# Initialize test exit code
 TEST_EXIT_CODE=0
 
 echo "--- 2. Setting up Python Environment ---"
@@ -16,6 +15,29 @@ python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 echo "Python dependencies installed."
 
+
+# Install Node.js (which includes npm) using nvm
+echo "Installing Node.js and npm via nvm..."
+
+# Download and run the nvm installer script
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+# Activate nvm in the current shell session
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# Install a recent LTS version of Node (this installs node and npm)
+nvm install 18
+nvm use 18
+
+echo "Node/npm installation complete. node version: $(node -v), npm version: $(npm -v)"
+# --- End of Node.js install ---
+
+# Install Testmo CLI using the newly installed npm
+echo "Installing testmo-cli using npm..."
+npm install -g @testmo/testmo-cli
+echo "Testmo CLI installed."
+
 echo "--- 4. Running Pytest (using python3 -m) ---"
 echo "Running test filter: $CASE_FUNC"
 
@@ -24,7 +46,7 @@ python3 -m pytest tests/ -k "$CASE_FUNC" --capture=no --junitxml=results.xml || 
 
 echo "Pytest finished with exit code: $TEST_EXIT_CODE"
 
-# Uploading Results to Testmo (using curl) ---
+# --- 5. Uploading Results to Testmo ---
 
 # Check if the results file was actually created
 if [ ! -f "results.xml" ]; then
@@ -33,20 +55,21 @@ if [ ! -f "results.xml" ]; then
     exit 1
 fi
 
-echo "Uploading 'results.xml' to Testmo using curl..."
+echo "Uploading 'results.xml' to Testmo..."
 
-
-curl -u "api:$TESTMO_TOKEN" \
-     -X POST "$TESTMO_URL/api/v1/projects/7/automation/submit" \
-     -F "name=WeTest Run: $CASE_FUNC" \
-     -F "source=WeTest" \
-     -F "results[]=@results.xml"
+# Report results to Testmo
+testmo automation:submit \
+    --project-id 7 \
+    --name "WeTest Run: $CASE_FUNC" \
+    --source "WeTest" \
+    --results results.xml
 
 UPLOAD_STATUS=$?
 if [ $UPLOAD_STATUS -ne 0 ]; then
-    echo "WARNING: Failed to upload results to Testmo. curl exited with code $UPLOAD_STATUS."
+    echo "WARNING: Failed to upload results to Testmo. CLI exited with code $UPLOAD_STATUS."
 fi
 
 
+# Exit with the *original* pytest exit code.
 echo "Exiting with original test code: $TEST_EXIT_CODE"
 exit $TEST_EXIT_CODE
