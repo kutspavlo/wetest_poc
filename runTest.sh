@@ -58,7 +58,7 @@ fi
 echo "Uploading 'results.xml' to Testmo..."
 
 # Report results to Testmo
-testmo automation:submit \
+testmo automation:run:submit \
     --project-id 7 \
     --name "WeTest Run: $CASE_FUNC" \
     --source "WeTest" \
