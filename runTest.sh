@@ -11,6 +11,8 @@ echo "--- Installing Dependencies ---"
 python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 echo "Python dependencies installed."
+echo "--- Installing jq... ---"
+apt-get update && apt-get install -y jq
 
 echo "--- Running Pytest ---"
 echo "Running test filter: $CASE_FUNC"
@@ -20,9 +22,10 @@ python3 -m pytest tests/ -k "$CASE_FUNC" --capture=no --junitxml=results.xml || 
 echo "Pytest finished with exit code: $TEST_EXIT_CODE"
 
 # --- 5. Uploading Results to Testmo (Conditional) ---
+REPORT_FLAG=$(echo "$EXTRA_INFO" | jq -r .REPORT_TO_TESTMO)
 
 # Check if the UPLOAD_TO_TESTMO flag is set to "true"
-if [ $EXTRA_INFO.REPORT_TO_TESTMO == true ]; then
+if [ "$REPORT_FLAG" == "true" ]; then
     echo "REPORT_TO_TESTMO flag is 'true'. Proceeding with Testmo upload."
 
     # --- Start of Testmo-specific logic ---
