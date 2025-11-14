@@ -12,21 +12,6 @@ python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 echo "Python dependencies installed."
 
-echo "--- Installing Node.js and npm via nvm ---"
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-nvm install 18
-nvm use 18
-
-echo "Node/npm installation complete. node version: $(node -v), npm version: $(npm -v)"
-
-echo "--- Installing testmo-cli using npm---"
-npm install -g @testmo/testmo-cli
-echo "Testmo CLI installed."
-
 echo "--- Running Pytest ---"
 echo "Running test filter: $CASE_FUNC"
 
@@ -34,26 +19,60 @@ python3 -m pytest tests/ -k "$CASE_FUNC" --capture=no --junitxml=results.xml || 
 
 echo "Pytest finished with exit code: $TEST_EXIT_CODE"
 
-if [ ! -f "results.xml" ]; then
-    echo "ERROR: Test results file 'results.xml' not found."
-    echo "Please check your pytest command."
-    exit 1
+# --- 5. Uploading Results to Testmo (Conditional) ---
+
+# Check if the UPLOAD_TO_TESTMO flag is set to "true"
+if [ "$EXTRA_INFO.REPORT_TO_TESTMO" == "true" ]; then
+    echo "REPORT_TO_TESTMO flag is 'true'. Proceeding with Testmo upload."
+
+    # --- Start of Testmo-specific logic ---
+
+    # Install Node.js (which includes npm) using nvm
+    echo "Installing Node.js and npm via nvm..."
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+    # Activate nvm in the current shell session
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+    # Install a recent LTS version of Node (this installs node and npm)
+    nvm install 18
+    nvm use 18
+    echo "Node/npm installation complete. node version: $(node -v), npm version: $(npm -v)"
+
+    # Install Testmo CLI using the newly installed npm
+    echo "Installing testmo-cli using npm..."
+    npm install -g @testmo/testmo-cli
+    echo "Testmo CLI installed."
+
+    # Check if results file exists
+    if [ ! -f "results.xml" ]; then
+        echo "ERROR: Test results file 'results.xml' not found."
+        # We don't exit here, just warn, so the script can finish
+        echo "WARNING: Cannot upload to Testmo."
+    else
+        # Run the upload
+        echo "Uploading 'results.xml' to Testmo..."
+        testmo automation:run:submit \
+            --instance https://a5test.testmo.net \
+            --project-id 7 \
+            --name "$CASE_FUNC-($(date +'%Y/%m/%d %H:%M'))" \
+            --source "WeTest" \
+            --results results.xml
+
+        UPLOAD_STATUS=$?
+        if [ $UPLOAD_STATUS -ne 0 ]; then
+            echo "WARNING: Failed to upload results to Testmo. CLI exited with code $UPLOAD_STATUS."
+        fi
+    fi
+    # --- End of Testmo-specific logic ---
+
+else
+    echo "REPORT_TO_TESTMO flag is not 'true' (Value: '$REPORT_TO_TESTMO'). Skipping Testmo reporting."
 fi
 
-echo "--- Uploading 'results.xml' to Testmo ---"
+# --- 6. Concluding WeTest Run ---
 
-testmo automation:run:submit \
-    --instance https://a5test.testmo.net \
-    --project-id 7 \
-    --name "$CASE_FUNC-($(date +'%Y/%m/%d %H:%M'))" \
-    --source "WeTest" \
-    --results results.xml
-
-UPLOAD_STATUS=$?
-if [ $UPLOAD_STATUS -ne 0 ]; then
-    echo "WARNING: Failed to upload results to Testmo. CLI exited with code $UPLOAD_STATUS."
-fi
-
-
+# Exit with the *original* pytest exit code.
 echo "Exiting with original test code: $TEST_EXIT_CODE"
 exit $TEST_EXIT_CODE
