@@ -5,7 +5,7 @@ from pom.native_page import NativePage
 
 
 @pytest.mark.login
-def test_user_login(cocos_poco, android_poco, test_credentials):
+def test_user_login(cocos_poco, android_poco, test_credentials, get_device_os):
     """
     Test case for a successful user login.
 
@@ -33,7 +33,8 @@ def test_user_login(cocos_poco, android_poco, test_credentials):
     )
 
     # 5. Handle the native "Navigate Up" action
-    native_page.click_navigate_up()
+    if get_device_os == "android":
+        native_page.click_navigate_up()
 
     # 6. Handle post-login popups
     hall_page.close_promo_if_present()
@@ -41,7 +42,19 @@ def test_user_login(cocos_poco, android_poco, test_credentials):
     # 7. Final Assertion: Verify login was successful
     assert hall_page.is_balance_visible(), "Login failed: Balance icon was not found."
 
-    # 8. Navigate and varify various game types
+
+@pytest.mark.login
+def test_poker_navigation(cocos_poco, android_poco, test_credentials, get_device_os):
+    """
+    Test case for a successful poker games navigation.
+
+    Fixtures:
+    - cocos_poco: Provides the initialized CocosJS driver.
+    """
+
+
+    hall_page = HallPage(cocos_poco)
+
     hall_page.click_mtt()
     hall_page.click_navigate_back_button()
     hall_page.click_nlhe()
@@ -54,4 +67,3 @@ def test_user_login(cocos_poco, android_poco, test_credentials):
     hall_page.click_navigate_back_button()
     hall_page.click_global_spins()
     hall_page.click_navigate_back_button()
-    # test pipeline mirror6

@@ -1,5 +1,5 @@
 import pytest
-from airtest.core.api import connect_device, stop_app, clear_app
+from airtest.core.api import device, connect_device
 from poco.drivers.cocosjs import CocosJsPoco
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
 
@@ -39,11 +39,21 @@ def cocos_poco():
 
 
 @pytest.fixture(scope="function")
-def android_poco():
+def android_poco(get_device_os):
     """
     Fixture to initialize the native AndroidUiautomationPoco driver.
     It's "function" scoped to be available when needed.
     """
     # This assumes the device is already connected by the `cocos_poco` fixture
-    poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
-    yield poco
+    if get_device_os == "android":
+        poco = AndroidUiautomationPoco(use_airtest_input=True, screenshot_each_action=False)
+        yield poco
+
+
+@pytest.fixture(scope="function")
+def get_device_os():
+    """
+    Fixture to detect current device OS
+    """
+    platform = device().platform
+    return platform
