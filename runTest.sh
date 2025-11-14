@@ -45,7 +45,7 @@ echo "--- Uploading 'results.xml' to Testmo ---"
 testmo automation:run:submit \
     --instance https://a5test.testmo.net \
     --project-id 7 \
-    --name "WeTest Run: $CASE_FUNC ($(date +'%Y-%m-%d %H:%M:%S'))" \
+    --name "$CASE_FUNC-($(date +'%Y/%m/%d %H:%M'))" \
     --source "WeTest" \
     --results results.xml
 
