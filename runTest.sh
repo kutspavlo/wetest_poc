@@ -4,63 +4,48 @@ export TESTMO_TOKEN="testmo_api_eyJpdiI6Inl3S2tVdmw1U05mMGkvZy9pcFVLTHc9PSIsInZh
 
 TEST_EXIT_CODE=0
 
-echo "--- 2. Setting up Python Environment ---"
+echo "--- Setting up Python Environment ---"
 echo "Using system Python 3..."
 
-echo "--- 3. Installing Dependencies ---"
-
-# Install Python dependencies
+echo "--- Installing Dependencies ---"
 python3 -m pip install --upgrade pip
 python3 -m pip install -r requirements.txt
 echo "Python dependencies installed."
 
-
-# Install Node.js (which includes npm) using nvm
-echo "Installing Node.js and npm via nvm..."
-
-# Download and run the nvm installer script
+echo "--- Installing Node.js and npm via nvm ---"
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-# Activate nvm in the current shell session
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-# Install a recent LTS version of Node (this installs node and npm)
 nvm install 18
 nvm use 18
 
 echo "Node/npm installation complete. node version: $(node -v), npm version: $(npm -v)"
-# --- End of Node.js install ---
 
-# Install Testmo CLI using the newly installed npm
-echo "Installing testmo-cli using npm..."
+echo "--- Installing testmo-cli using npm---"
 npm install -g @testmo/testmo-cli
 echo "Testmo CLI installed."
 
-echo "--- 4. Running Pytest (using python3 -m) ---"
+echo "--- Running Pytest ---"
 echo "Running test filter: $CASE_FUNC"
 
-# Run pytest, generate 'results.xml', and capture the exit code
 python3 -m pytest tests/ -k "$CASE_FUNC" --capture=no --junitxml=results.xml || TEST_EXIT_CODE=$?
 
 echo "Pytest finished with exit code: $TEST_EXIT_CODE"
 
-# --- 5. Uploading Results to Testmo ---
-
-# Check if the results file was actually created
 if [ ! -f "results.xml" ]; then
     echo "ERROR: Test results file 'results.xml' not found."
     echo "Please check your pytest command."
     exit 1
 fi
 
-echo "Uploading 'results.xml' to Testmo..."
+echo "--- Uploading 'results.xml' to Testmo ---"
 
-# Report results to Testmo
 testmo automation:run:submit \
     --instance https://a5test.testmo.net \
     --project-id 7 \
-    --name "WeTest Run: $CASE_FUNC" \
+    --name "WeTest Run: $CASE_FUNC ($(date +'%Y-%m-%d %H:%M:%S'))" \
     --source "WeTest" \
     --results results.xml
 
@@ -70,6 +55,5 @@ if [ $UPLOAD_STATUS -ne 0 ]; then
 fi
 
 
-# Exit with the *original* pytest exit code.
 echo "Exiting with original test code: $TEST_EXIT_CODE"
 exit $TEST_EXIT_CODE
