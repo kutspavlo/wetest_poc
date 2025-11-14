@@ -22,7 +22,7 @@ echo "Pytest finished with exit code: $TEST_EXIT_CODE"
 # --- 5. Uploading Results to Testmo (Conditional) ---
 
 # Check if the UPLOAD_TO_TESTMO flag is set to "true"
-if [ "$EXTRA_INFO.REPORT_TO_TESTMO" == "true" ]; then
+if [ $EXTRA_INFO.REPORT_TO_TESTMO == true ]; then
     echo "REPORT_TO_TESTMO flag is 'true'. Proceeding with Testmo upload."
 
     # --- Start of Testmo-specific logic ---
@@ -68,7 +68,7 @@ if [ "$EXTRA_INFO.REPORT_TO_TESTMO" == "true" ]; then
     # --- End of Testmo-specific logic ---
 
 else
-    echo "REPORT_TO_TESTMO flag is not 'true' (Value: '$REPORT_TO_TESTMO'). Skipping Testmo reporting."
+    echo "REPORT_TO_TESTMO flag is not 'true' (Value: '$EXTRA_INFO.REPORT_TO_TESTMO'). Skipping Testmo reporting."
 fi
 
 # --- 6. Concluding WeTest Run ---
