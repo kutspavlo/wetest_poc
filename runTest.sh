@@ -71,7 +71,7 @@ if [ "$REPORT_FLAG" == "true" ]; then
     # --- End of Testmo-specific logic ---
 
 else
-    echo "REPORT_TO_TESTMO flag is not 'true' (Value: '$EXTRA_INFO.REPORT_TO_TESTMO'). Skipping Testmo reporting."
+    echo "REPORT_TO_TESTMO flag is not 'true' (Value: '$REPORT_FLAG'). Skipping Testmo reporting."
 fi
 
 # --- 6. Concluding WeTest Run ---
