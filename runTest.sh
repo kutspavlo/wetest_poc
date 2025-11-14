@@ -1,17 +1,27 @@
 #!/bin/bash
 
+export TESTMO_URL="https://a5test.testmo.net"
+export TESTMO_TOKEN="testmo_api_eyJpdiI6Inl3S2tVdmw1U05mMGkvZy9pcFVLTHc9PSIsInZhbHVlIjoiT0lBV3lIWU8vdnhuN1JXbXMzVHJVV0ZoQk9XUlM1T3pFWXM0eEpjK1UzNEIxdVh5WVlJdWtxLzlvbGJQQ1FoMCIsIm1hYyI6ImY4ZTcyOTc5MGRlNDFkNjUyMTgxOGYyMjRiNWM2MWIzYjBmMzk1MzRiZmU0NjA5ZGQ0OWJjNmU1N2E2NWNlYzEiLCJ0YWciOiIifQ=="
+
 TEST_EXIT_CODE=0
 
-echo "--- 1. Setting up Python Environment ---"
+echo "--- 2. Setting up Python Environment ---"
 echo "Using system Python 3..."
 
-echo "--- 2. Installing Dependencies (using python3 -m pip) ---"
-python3 -m pip install -r requirements.txt
-python3 -m pip install testmo-cli
-echo "Dependencies installed."
+echo "--- 3. Installing Dependencies ---"
 
-echo "--- 3. Running Pytest (using python3 -m) ---"
+
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
+echo "Python dependencies installed."
+
+echo "Installing testmo-cli using npm..."
+npm install -g @testmo/testmo-cli
+echo "Testmo CLI installed."
+
+echo "--- 4. Running Pytest (using python3 -m) ---"
 echo "Running test filter: $CASE_FUNC"
+
 
 python3 -m pytest tests/ -k "$CASE_FUNC" --capture=no --junitxml=results.xml || TEST_EXIT_CODE=$?
 
@@ -26,7 +36,8 @@ fi
 
 echo "Uploading 'results.xml' to Testmo..."
 
-python3 -m testmo automation:submit \
+
+testmo automation:submit \
     --project-id 7 \
     --name "WeTest Run: $CASE_FUNC" \
     --source "WeTest" \
