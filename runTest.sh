@@ -1,7 +1,6 @@
 #!/bin/bash
 
-export TESTMO_URL="https://YOUR-INSTANCE.testmo.net"
-export TESTMO_TOKEN="YOUR_SECRET_API_TOKEN_HERE"
+export TESTMO_TOKEN="testmo_api_eyJpdiI6Inl3S2tVdmw1U05mMGkvZy9pcFVLTHc9PSIsInZhbHVlIjoiT0lBV3lIWU8vdnhuN1JXbXMzVHJVV0ZoQk9XUlM1T3pFWXM0eEpjK1UzNEIxdVh5WVlJdWtxLzlvbGJQQ1FoMCIsIm1hYyI6ImY4ZTcyOTc5MGRlNDFkNjUyMTgxOGYyMjRiNWM2MWIzYjBmMzk1MzRiZmU0NjA5ZGQ0OWJjNmU1N2E2NWNlYzEiLCJ0YWciOiIifQ=="
 
 TEST_EXIT_CODE=0
 
@@ -59,6 +58,7 @@ echo "Uploading 'results.xml' to Testmo..."
 
 # Report results to Testmo
 testmo automation:run:submit \
+    --instance https://a5test.testmo.net \
     --project-id 7 \
     --name "WeTest Run: $CASE_FUNC" \
     --source "WeTest" \
