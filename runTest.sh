@@ -37,8 +37,8 @@ echo "Uploading 'results.xml' to Testmo..."
 
 # This command uses Environment Variables (TESTMO_URL, TESTMO_TOKEN)
 # We use $CASE_FUNC in the run name for better tracking
-testmo automation:submit \
-    --project-id 1 \
+python3 -m testmo automation:submit \
+    --project-id 7 \
     --name "WeTest Run: $CASE_FUNC" \
     --source "WeTest" \
     --results results.xml
