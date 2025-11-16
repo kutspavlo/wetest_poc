@@ -8,6 +8,21 @@ class HallPage(BasePage):
 
     # --- Locators ---
     # Locators are defined as tuples.
+
+    # TOP BAR ITEMS
+    LOGO_IMG = ("HallScene", "img_logo_wpto")
+    SUPPORT_BUTTON = ("HallScene", "kefu")
+    PROFILE_BUTTON = ("HallScene", "Profile")
+    LOGIN_BUTTON = ("HallScene", "btn_login")
+    REGISTER_BUTTON = ("HallScene", "btn_register")
+    BALANCE_ICON = ("HallScene", "gold_Panel")
+    NOTIFICATIONS_BUTTON = ("HallScene", "MailEntrance")
+
+    BANNERS_VIEW = ("HallScene", "pageView_banners")
+
+    # GAMES GRID ITEMS
+    MY_TOURNEYS_WIDGET = ("HallScene", "MyTournaments")
+
     MTT_BUTTON = ("HallScene", "mtt")
     NLHE_BUTTON = ("HallScene", "nlhe")
     FLASH_BUTTON = ("HallScene", "flash")
@@ -15,10 +30,16 @@ class HallPage(BasePage):
     SHORT_DECK_BUTTON = ("HallScene", "short_deck")
     GLOBAL_SPINS_BUTTON = ("HallScene", "sng")
 
-    BACK_BUTTON = ("HallScene", "HallPokerView", "backBtn")
+    # BOTTOM BAR ITEMS
+    POKER_BUTTON = ("HallScene", "lobby")
+    CASINO_BUTTON = ("HallScene", "casino")
+    CASHIER_BUTTON = ("HallScene", "circle_button")
+    SPORTS_BUTTON = ("HallScene", "sportsBook")
+    PROMO_BUTTON = ("HallScene", "promotion")
 
-    LOGIN_BUTTON = ("HallScene", "btn_login")
-    BALANCE_ICON = ("HallScene", "gold_Panel")
+
+
+    BACK_BUTTON = ("HallScene", "HallPokerView", "backBtn")
 
     PROMO_CLOSE_BUTTON = ("HallScene", "Button_Close")
 
