@@ -37,10 +37,6 @@ class HallPage(BasePage):
     SPORTS_BUTTON = ("HallScene", "sportsBook")
     PROMO_BUTTON = ("HallScene", "promotion")
 
-
-
-    BACK_BUTTON = ("HallScene", "HallPokerView", "backBtn")
-
     PROMO_CLOSE_BUTTON = ("HallScene", "Button_Close")
 
     # --- Actions ---
@@ -92,7 +88,7 @@ class HallPage(BasePage):
         print("Clicking PLO button...")
         self.click_element(self.PLO_BUTTON)
 
-    def click_shor_deck(self):
+    def click_short_deck(self):
         """Clicks the SHORT DECK button to open the SHORT DECK lobby."""
         print("Clicking SHORT DECK button...")
         self.click_element(self.SHORT_DECK_BUTTON)
@@ -101,9 +97,3 @@ class HallPage(BasePage):
         """Clicks the GLOBAL SPINS button to open the GLOBAL SPINS lobby."""
         print("Clicking GLOBAL SPINS button...")
         self.click_element(self.GLOBAL_SPINS_BUTTON)
-
-    def click_navigate_back_button(self):
-        """Clicks the navigation back button to return to the hall."""
-        print("Clicking navigation back button...")
-        self.click_element(self.BACK_BUTTON)
-

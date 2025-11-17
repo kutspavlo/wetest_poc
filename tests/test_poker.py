@@ -1,5 +1,6 @@
 import pytest
 from pom.hall_page import HallPage
+from pom.hall_poker_page import HallPokerPage
 from pom.login_page import LoginPage
 from pom.native_page import NativePage
 
@@ -52,18 +53,36 @@ def test_poker_navigation(cocos_poco, android_poco, test_credentials, get_device
     - cocos_poco: Provides the initialized CocosJS driver.
     """
 
-
+    # 1. Initialize Page Objects with their respective drivers
     hall_page = HallPage(cocos_poco)
+    hall_poker_page = HallPokerPage(cocos_poco)
 
+    # 2. Navigate to MTT grid and verify it appears
     hall_page.click_mtt()
-    hall_page.click_navigate_back_button()
+    hall_poker_page.verify_mtt_grid_loaded()
+    hall_poker_page.click_navigate_back_button()
+
+    # 3. Navigate to NLHE grid and verify it appears
     hall_page.click_nlhe()
-    hall_page.click_navigate_back_button()
+    hall_poker_page.verify_nlhe_grid_loaded()
+    hall_poker_page.click_navigate_back_button()
+
+    # 4. Navigate to FLASH grid and verify it appears
     hall_page.click_flash()
-    hall_page.click_navigate_back_button()
+    hall_poker_page.verify_flash_grid_loaded()
+    hall_poker_page.click_navigate_back_button()
+
+    # 5. Navigate to PLO grid and verify it appears
     hall_page.click_plo()
-    hall_page.click_navigate_back_button()
-    hall_page.click_shor_deck()
-    hall_page.click_navigate_back_button()
+    hall_poker_page.verify_plo_grid_loaded()
+    hall_poker_page.click_navigate_back_button()
+
+    # 6. Navigate to SHORT DECK grid and verify it appears
+    hall_page.click_short_deck()
+    hall_poker_page.verify_short_deck_grid_loaded()
+    hall_poker_page.click_navigate_back_button()
+
+    # 6. Navigate to GLOBAL SPINS grid and verify it appears
     hall_page.click_global_spins()
-    hall_page.click_navigate_back_button()
+    hall_poker_page.verify_global_spin_grid_loaded()
+    hall_poker_page.click_navigate_back_button()
