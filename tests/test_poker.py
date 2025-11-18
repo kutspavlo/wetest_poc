@@ -100,5 +100,6 @@ def test_hlhe_table(cocos_poco):
     hall_poker_page = HallPokerPage(cocos_poco)
 
     hall_page.click_nlhe()
-    hall_poker_page.find_and_click_cash_game_by_small_blind_limit(0.02)
+    hall_poker_page.find_and_click_cash_game_by_small_blind_limit(1)
     hall_poker_page.find_by_pattern_and_click_table_with_seats(hall_poker_page.NLHE_REGULAR_PATTERN)
+    hall_poker_page.join_cash_table_on_available_seat()

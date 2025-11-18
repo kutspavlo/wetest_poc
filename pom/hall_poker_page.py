@@ -25,6 +25,10 @@ class HallPokerPage(BasePage):
 
     # GAME TYPE PATTERNS
     NLHE_REGULAR_PATTERN = r'^HL\d{4}$'
+    NLHE_BOMB_POTS_PATTERN = r'^HLB\d{4}$'
+
+    #CASH TABLE
+    SEATS = ("gameContainer", "view", "page1", "seatPanel", "Seat")
 
     # --- Actions ---
 
@@ -118,4 +122,12 @@ class HallPokerPage(BasePage):
             if (game.offspring("playerCountLabel").get_text() != "8/8") & (
                     is_matching_pattern(game.offspring("roomName").get_text(), pattern)):
                 game.offspring("content").click()
+                return
+
+    def join_cash_table_on_available_seat(self):
+        """Find and seat on available cash table place"""
+        seats = self.wait_for_element(self.SEATS)
+        for seat in seats:
+            if not seat.offspring("roleName_text_forRemark").exists():
+                seat.offspring("button").click()
                 return
