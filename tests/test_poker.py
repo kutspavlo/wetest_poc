@@ -45,7 +45,7 @@ def test_user_login(cocos_poco, android_poco, test_credentials, get_device_os):
 
 
 @pytest.mark.login
-def test_poker_navigation(cocos_poco, android_poco, test_credentials, get_device_os):
+def test_poker_navigation(cocos_poco):
     """
     Test case for a successful poker games navigation.
 
@@ -86,3 +86,19 @@ def test_poker_navigation(cocos_poco, android_poco, test_credentials, get_device
     hall_page.click_global_spins()
     hall_poker_page.verify_global_spin_grid_loaded()
     hall_poker_page.click_navigate_back_button()
+
+
+def test_hlhe_table(cocos_poco):
+    """
+        Test case for a successful NLHE game joining.
+
+        Fixtures:
+        - cocos_poco: Provides the initialized CocosJS driver.
+        """
+
+    hall_page = HallPage(cocos_poco)
+    hall_poker_page = HallPokerPage(cocos_poco)
+
+    hall_page.click_nlhe()
+    hall_poker_page.find_and_click_cash_game_by_small_blind_limit(0.02)
+    hall_poker_page.find_by_pattern_and_click_table_with_seats(hall_poker_page.NLHE_REGULAR_PATTERN)

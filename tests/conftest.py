@@ -3,7 +3,7 @@ from airtest.core.api import device, connect_device
 from poco.drivers.cocosjs import CocosJsPoco
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
 
-# Define the package name of your app
+
 APP_PACKAGE_NAME = "com.your.app.package"
 
 
@@ -12,8 +12,8 @@ def test_credentials():
     """Provides test login credentials."""
     # In a real project, load this from env variables or a config file
     return {
-        "email": "dreambel@icloud.com",
-        "password": "Pavelrew22011991"
+        "email": "sonthaqa1@mailinator.com",
+        "password": "Poker@1234!"
     }
 
 
