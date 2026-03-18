@@ -5,7 +5,7 @@ from enums.prod_domains import ProductionDomains
 
 class TestProdDomains:
 
-    @pytest.mark.domains
+    @pytest.mark.login
     @pytest.mark.parametrize("domain_url", [
         ProductionDomains.MAIN_PRIMARY,
         ProductionDomains.MAIN_SECONDARY,
