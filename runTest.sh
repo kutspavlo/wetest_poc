@@ -61,8 +61,7 @@ if [ "$REPORT_FLAG" == "true" ]; then
             --project-id 7 \
             --name "$CASE_FUNC-($(date +'%Y/%m/%d %H:%M'))" \
             --source "WeTest" \
-            --results results.xml \
-            --property-map domain_url:field:domain_url status_code:field:status_code response_body:note
+            --results results.xml --property-map response_body:note domain_url:field:domain_url
 
         UPLOAD_STATUS=$?
         if [ $UPLOAD_STATUS -ne 0 ]; then
