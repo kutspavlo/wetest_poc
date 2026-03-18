@@ -12,7 +12,6 @@ from enums.prod_domains import ProductionDomains
 
 ])
 def test_puke_production_domains(record_property, domain_url, production_domain_snapshot):
-    domain_url = ProductionDomains.MAIN_PRIMARY
     record_property("domain_url", domain_url.value)
 
     response = requests.get(domain_url.value)
