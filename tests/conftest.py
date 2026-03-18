@@ -1,8 +1,10 @@
+import json
+from pathlib import Path
+
 import pytest
 from airtest.core.api import device, connect_device
 from poco.drivers.cocosjs import CocosJsPoco
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
-
 
 APP_PACKAGE_NAME = "com.your.app.package"
 
@@ -57,3 +59,11 @@ def get_device_os():
     """
     platform = device().platform
     return platform
+
+
+@pytest.fixture(scope="session")
+def production_domain_snapshot():
+    base_dir = Path(__file__).parent
+    file_path = base_dir / "data" / "production_domain_snapshot.json"
+    with open(file_path, 'r') as f:
+        return json.load(f)
