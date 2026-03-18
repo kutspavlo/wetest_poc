@@ -20,7 +20,7 @@ def test_production_domains(record_property, domain_url, production_domain_snaps
     assert response.status_code == 200, f"Expected 200 but got {response.status_code}"
 
     response_data = response.json()
-    record_property("response body", response_data)
+    record_property("response_body", response_data)
     actual_proxies = response_data["config"]["proxies"]
     expected_proxies = production_domain_snapshot["config"]["proxies"]
 
