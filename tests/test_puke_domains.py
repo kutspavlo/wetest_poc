@@ -11,7 +11,7 @@ from enums.prod_domains import ProductionDomains
     ProductionDomains.BACKUP_SECONDARY
 
 ])
-def test_production_domains(self, domain_url, production_domain_snapshot):
+def test_production_domains(domain_url, production_domain_snapshot):
     domain_url = ProductionDomains.MAIN_PRIMARY
 
     response = requests.get(domain_url.value)
