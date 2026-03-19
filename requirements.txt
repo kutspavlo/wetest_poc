@@ -1,4 +1,4 @@
-opencv-contrib-python-headless==4.6.0.66
 airtest
 pocoui
 pytest
+appium
