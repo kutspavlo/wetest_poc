@@ -41,7 +41,9 @@ def run_ci_wrapper():
         # 5. RUN YOUR EXISTING PYTEST STRUCTURE
         # This executes 'pytest' just like you do locally
         # You can add arguments like: ["pytest", "tests/my_test_folder", "--html=report.html"]
-        process = subprocess.run(["pytest", "tests/test_puke_download_and_installl.py"], shell=False)
+        pytest_cmd = [sys.executable, "-m", "pytest", "tests/test_puke_download_and_installl.py"]
+
+        process = subprocess.run(pytest_cmd, shell=False)
         pytest_exit_code = process.returncode
 
         result_data['status'] = "success" if pytest_exit_code == 0 else "failed"
