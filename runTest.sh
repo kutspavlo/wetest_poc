@@ -81,7 +81,7 @@ fi
 SLACK_BOT_TOKEN="xoxb-1902914001301-9725996265106-h1xAzHTTqUEXH4CF3euiRU2L"
 SLACK_CHANNEL_ID="C0A0H6V5BMK"
 
-if [ $TEST_EXIT_CODE -ne 0 ]; then
+if [ $TEST_EXIT_CODE -ne 1 ]; then
     echo "Test failed (Code: $TEST_EXIT_CODE). Sending Slack notification..."
 
     # Check if report exists
