@@ -96,7 +96,8 @@ if [ $TEST_EXIT_CODE -ne 1 ]; then
         curl -s -X POST -T "results.xml" "$UPLOAD_URL"
 
         # 3. Complete the upload and share to the channel
-        COMMENT=":warning: *Test Run Failed!* \n*Function:* $CASE_FUNC \n*Date:* $(date +'%Y-%m-%d %H:%M')"
+        COMMENT=":warning: *Test Run Failed!*"$'\n'"*Function:* $CASE_FUNC"$'\n'"*Date:* $(date +'%Y-%m-%d %H:%M')" \
+              $'\n'"*Testmo Results:* https://a5test.testmo.net/automation/runs/7_"
 
         RESPONSE=$(curl -s -F "files=[{\"id\":\"$FILE_ID\"}]" \
              -F "channel_id=$SLACK_CHANNEL_ID" \
