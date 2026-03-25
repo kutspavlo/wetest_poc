@@ -78,6 +78,7 @@ fi
 # --- 6. Slack Notification on Failure ---
 
 # Set your Slack credentials (Ideally move these to Environment Variables)
+PUKE_DOMAINS_FLAG=$(echo "$EXTRA_INFO" | jq -r .PUKE_DOMAINS)
 SLACK_BOT_TOKEN="xoxb-1902914001301-10765586324243-XOLQy6OUiTKUa1beRaEuk59D"
 SLACK_CHANNEL_ID="C0A0H6V5BMK"
 USER_PAV="U09KKKBQJR0"
@@ -86,7 +87,7 @@ USER_PAT="U043V48KY3G"
 USER_MUS="U0395HF4YN4"
 USER_RAM="U08JANN610U"
 
-if [ $TEST_EXIT_CODE -ne 1 ]; then
+if [ "$TEST_EXIT_CODE" -ne 0 ] && [ "$PUKE_DOMAINS_FLAG" = "true" ]; then
     echo "Test failed (Code: $TEST_EXIT_CODE). Sending Slack notification..."
 
     if [ -f "results.xml" ]; then
@@ -129,8 +130,19 @@ EOF
              -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
              https://slack.com/api/chat.postMessage
     fi
+
+elif [ "$TEST_EXIT_CODE" -eq 0 ] && [ "$PUKE_DOMAIN" = "true" ]; then
+    echo "Tests passed. Sending Success notification to Slack..."
+
+    SUCCESS_TEXT=":white_check_mark: *Test Run Passed!* \n*Function:* $CASE_FUNC \n*Date:* $(date +'%Y-%m-%d %H:%M') \n*Results:* https://a5test.testmo.net/automation/runs/7"
+
+    curl -s -X POST -H 'Content-type: application/json' \
+         -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+         --data "{\"channel\":\"$SLACK_CHANNEL_ID\",\"text\":\"$SUCCESS_TEXT\"}" \
+         https://slack.com/api/chat.postMessage
+
 else
-    echo "Tests passed. Skipping Slack notification."
+    echo "Notification skipped (PUKE_DOMAIN is not true or conditions not met)."
 fi
 
 # Exit with the *original* pytest exit code.
