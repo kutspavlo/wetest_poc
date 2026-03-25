@@ -80,7 +80,11 @@ fi
 # Set your Slack credentials (Ideally move these to Environment Variables)
 SLACK_BOT_TOKEN="xoxb-1902914001301-10765586324243-XOLQy6OUiTKUa1beRaEuk59D"
 SLACK_CHANNEL_ID="C0A0H6V5BMK"
-USER1 = "U09KKKBQJR0"
+USER_PAV="U09KKKBQJR0"
+USER_VOV="U03KAARFKU7"
+USER_PAT="U043V48KY3G"
+USER_MUS="U0395HF4YN4"
+USER_RAM="U08JANN610U"
 
 if [ $TEST_EXIT_CODE -ne 1 ]; then
     echo "Test failed (Code: $TEST_EXIT_CODE). Sending Slack notification..."
@@ -103,7 +107,7 @@ if [ $TEST_EXIT_CODE -ne 1 ]; then
 *Date:* $(date +'%Y-%m-%d %H:%M')
 *Testmo Results:* https://a5test.testmo.net/automation/runs/7
 
-*Attention:* <@$USER1>
+*Attention:* <@$USER_PAV>
 EOF
 )
 
