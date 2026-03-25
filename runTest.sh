@@ -80,6 +80,7 @@ fi
 # Set your Slack credentials (Ideally move these to Environment Variables)
 SLACK_BOT_TOKEN="xoxb-1902914001301-10765586324243-XOLQy6OUiTKUa1beRaEuk59D"
 SLACK_CHANNEL_ID="C0A0H6V5BMK"
+USER1 = "U09KKKBQJR0"
 
 if [ $TEST_EXIT_CODE -ne 1 ]; then
     echo "Test failed (Code: $TEST_EXIT_CODE). Sending Slack notification..."
@@ -96,8 +97,15 @@ if [ $TEST_EXIT_CODE -ne 1 ]; then
         curl -s -X POST -T "results.xml" "$UPLOAD_URL"
 
         # 3. Complete the upload and share to the channel
-        COMMENT=":warning: *Test Run Failed!*"$'\n'"*Function:* $CASE_FUNC"$'\n'"*Date:* $(date +'%Y-%m-%d %H:%M')" \
-              $'\n'"*Testmo Results:* https://a5test.testmo.net/automation/runs/7_"
+        COMMENT=$(cat <<EOF
+        :warning: *Test Run Failed!*
+        *Function:* $CASE_FUNC
+        *Date:* $(date +'%Y-%m-%d %H:%M')
+        *Testmo Results:* https://a5test.testmo.net/automation/runs/7
+
+        *Attention:* <@$USER1>
+        EOF
+        )
 
         RESPONSE=$(curl -s -F "files=[{\"id\":\"$FILE_ID\"}]" \
              -F "channel_id=$SLACK_CHANNEL_ID" \
