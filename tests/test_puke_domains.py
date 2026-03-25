@@ -11,7 +11,7 @@ from enums.prod_domains import ProductionDomains
     ProductionDomains.BACKUP_SECONDARY
 
 ])
-def test_puke_production_domains(driver, record_property, domain_url, production_domain_snapshot):
+def test_puke_production_domains(record_property, domain_url, production_domain_snapshot):
     record_property("domain_url", domain_url.value)
 
     response = requests.get(domain_url.value)

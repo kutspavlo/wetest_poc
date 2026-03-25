@@ -1,13 +1,10 @@
 import json
-import os
 from pathlib import Path
 
 import pytest
 from airtest.core.api import device, connect_device
 from poco.drivers.cocosjs import CocosJsPoco
 from poco.drivers.android.uiautomation import AndroidUiautomationPoco
-from appium import webdriver
-from appium.webdriver.webdriver import AppiumOptions
 
 APP_PACKAGE_NAME = "com.your.app.package"
 
@@ -70,24 +67,3 @@ def production_domain_snapshot():
     file_path = base_dir / "data" / "production_domain_snapshot.json"
     with open(file_path, 'r') as f:
         return json.load(f)
-
-
-@pytest.fixture
-def driver():
-    # Check if we are running in CI via the wrapper
-    remote_url = os.environ.get('UDT_REMOTE_URL')
-    caps_json = os.environ.get('UDT_CAPS')
-
-    if remote_url and caps_json:
-        # CI Mode: Use the capabilities provided by the wrapper
-        caps = json.loads(caps_json)
-        options = AppiumOptions().load_capabilities(caps)
-        driver = webdriver.Remote(command_executor=remote_url, options=options)
-    else:
-        # Local Mode: Your existing local driver setup
-        options = AppiumOptions()
-        options.set_capability("platformName", "Android")
-        driver = webdriver.Remote("http://localhost:4723/wd/hub", options=options)
-
-    yield driver
-    driver.quit()
