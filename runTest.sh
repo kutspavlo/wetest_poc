@@ -131,7 +131,7 @@ EOF
              https://slack.com/api/chat.postMessage
     fi
 
-elif [ "$TEST_EXIT_CODE" -eq 0 ] && [ "$PUKE_DOMAIN" = "true" ]; then
+elif [ "$TEST_EXIT_CODE" -eq 0 ] && [ "$PUKE_DOMAINS" = "true" ]; then
     echo "Tests passed. Sending Success notification to Slack..."
 
     SUCCESS_TEXT=":white_check_mark: *Test Run Passed!* \n*Function:* $CASE_FUNC \n*Date:* $(date +'%Y-%m-%d %H:%M') \n*Results:* https://a5test.testmo.net/automation/runs/7"
