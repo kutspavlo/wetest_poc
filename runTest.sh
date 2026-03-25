@@ -107,7 +107,7 @@ if [ $TEST_EXIT_CODE -ne 1 ]; then
 *Date:* $(date +'%Y-%m-%d %H:%M')
 *Testmo Results:* https://a5test.testmo.net/automation/runs/7
 
-*Attention:* <@$USER_PAV>
+*Attention:* <@$USER_PAV> <@$USER_VOV> <@$USER_PAT> <@$USER_MUS> <@$USER_RAM>
 EOF
 )
 
