@@ -98,14 +98,14 @@ if [ $TEST_EXIT_CODE -ne 1 ]; then
 
         # 3. Complete the upload and share to the channel
         COMMENT=$(cat <<EOF
-        :warning: *Test Run Failed!*
-        *Function:* $CASE_FUNC
-        *Date:* $(date +'%Y-%m-%d %H:%M')
-        *Testmo Results:* https://a5test.testmo.net/automation/runs/7
+:warning: *Test Run Failed!*
+*Function:* $CASE_FUNC
+*Date:* $(date +'%Y-%m-%d %H:%M')
+*Testmo Results:* https://a5test.testmo.net/automation/runs/$RUN_ID
 
-        *Attention:* <@$USER1>
-        EOF
-        )
+*Attention:* <@$USER1>
+EOF
+)
 
         RESPONSE=$(curl -s -F "files=[{\"id\":\"$FILE_ID\"}]" \
              -F "channel_id=$SLACK_CHANNEL_ID" \
