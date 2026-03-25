@@ -78,7 +78,7 @@ fi
 # --- 6. Slack Notification on Failure ---
 
 # Set your Slack credentials (Ideally move these to Environment Variables)
-SLACK_BOT_TOKEN="xoxb-1902914001301-9725996265106-h1xAzHTTqUEXH4CF3euiRU2L"
+SLACK_BOT_TOKEN="xoxb-1902914001301-10765586324243-XOLQy6OUiTKUa1beRaEuk59D"
 SLACK_CHANNEL_ID="C0A0H6V5BMK"
 
 if [ $TEST_EXIT_CODE -ne 1 ]; then
