@@ -84,24 +84,35 @@ SLACK_CHANNEL_ID="C0A0H6V5BMK"
 if [ $TEST_EXIT_CODE -ne 1 ]; then
     echo "Test failed (Code: $TEST_EXIT_CODE). Sending Slack notification..."
 
-    # Check if report exists
     if [ -f "results.xml" ]; then
-        # Use Slack API to upload file and add a comment
-        curl -F file=@results.xml \
-             -F "initial_comment=:warning: *Test Run Failed!* %0A*Function:* $CASE_FUNC %0A*Date:* $(date +'%Y-%m-%d %H:%M')" \
-             -F channels=$SLACK_CHANNEL_ID \
-             -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
-             https://slack.com/api/files.upload
+        # 1. Get the upload URL and File ID
+        UPLOAD_CONF=$(curl -s -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+            "https://slack.com/api/files.getUploadURLExternal?filename=results.xml&length=$(stat -c%s results.xml)")
 
-        if [ $? -eq 0 ]; then
+        UPLOAD_URL=$(echo $UPLOAD_CONF | sed -n 's/.*"upload_url":"\([^"]*\)".*/\1/p' | sed 's/\\//g')
+        FILE_ID=$(echo $UPLOAD_CONF | sed -n 's/.*"file_id":"\([^"]*\)".*/\1/p')
+
+        # 2. Upload the file to the provided URL
+        curl -s -X POST -T "results.xml" "$UPLOAD_URL"
+
+        # 3. Complete the upload and share to the channel
+        COMMENT=":warning: *Test Run Failed!* \n*Function:* $CASE_FUNC \n*Date:* $(date +'%Y-%m-%d %H:%M')"
+
+        RESPONSE=$(curl -s -F "files=[{\"id\":\"$FILE_ID\"}]" \
+             -F "channel_id=$SLACK_CHANNEL_ID" \
+             -F "initial_comment=$COMMENT" \
+             -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+             https://slack.com/api/files.completeUploadExternal)
+
+        if [[ $RESPONSE == *"\"ok\":true"* ]]; then
             echo "Slack notification sent successfully."
         else
-            echo "ERROR: Failed to send Slack notification."
+            echo "ERROR: Slack API returned an error: $RESPONSE"
         fi
     else
-        # If file is missing, send a text-only message
-        curl -X POST -H 'Content-type: application/json' \
-             --data "{\"channel\":\"$SLACK_CHANNEL_ID\",\"text\":\":error: Tests failed, but results.xml was not found!\"}" \
+        # Fallback for missing file
+        curl -s -X POST -H 'Content-type: application/json' \
+             --data "{\"channel\":\"$SLACK_CHANNEL_ID\",\"text\":\":x: Tests failed, but results.xml was not found!\"}" \
              -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
              https://slack.com/api/chat.postMessage
     fi
