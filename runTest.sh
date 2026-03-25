@@ -101,7 +101,7 @@ if [ $TEST_EXIT_CODE -ne 1 ]; then
 :warning: *Test Run Failed!*
 *Function:* $CASE_FUNC
 *Date:* $(date +'%Y-%m-%d %H:%M')
-*Testmo Results:* https://a5test.testmo.net/automation/runs/$RUN_ID
+*Testmo Results:* https://a5test.testmo.net/automation/runs/7
 
 *Attention:* <@$USER1>
 EOF
