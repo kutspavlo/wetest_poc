@@ -12,7 +12,7 @@ python3 -m pip install --upgrade pip
 python3 -m pip install --default-timeout=1000 --retries 5 -r requirements.txt || { echo "ERROR: Failed to install dependencies"; exit 1; }
 echo "Python dependencies installed."
 echo "--- Installing jq... ---"
-apt-get update && apt-get install -y jq
+apt-get update && apt-get install -y jq libgl1
 
 echo "--- Running Pytest ---"
 echo "Running test filter: $CASE_FUNC"
