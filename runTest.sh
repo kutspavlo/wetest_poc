@@ -75,7 +75,39 @@ else
     echo "REPORT_TO_TESTMO flag is not 'true' (Value: '$REPORT_FLAG'). Skipping Testmo reporting."
 fi
 
-# --- 6. Concluding WeTest Run ---
+# --- 6. Slack Notification on Failure ---
+
+# Set your Slack credentials (Ideally move these to Environment Variables)
+SLACK_BOT_TOKEN="xoxb-1902914001301-9725996265106-h1xAzHTTqUEXH4CF3euiRU2L"
+SLACK_CHANNEL_ID="C0A0H6V5BMK"
+
+if [ $TEST_EXIT_CODE -ne 0 ]; then
+    echo "Test failed (Code: $TEST_EXIT_CODE). Sending Slack notification..."
+
+    # Check if report exists
+    if [ -f "results.xml" ]; then
+        # Use Slack API to upload file and add a comment
+        curl -F file=@results.xml \
+             -F "initial_comment=:warning: *Test Run Failed!* %0A*Function:* $CASE_FUNC %0A*Date:* $(date +'%Y-%m-%d %H:%M')" \
+             -F channels=$SLACK_CHANNEL_ID \
+             -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+             https://slack.com/api/files.upload
+
+        if [ $? -eq 0 ]; then
+            echo "Slack notification sent successfully."
+        else
+            echo "ERROR: Failed to send Slack notification."
+        fi
+    else
+        # If file is missing, send a text-only message
+        curl -X POST -H 'Content-type: application/json' \
+             --data "{\"channel\":\"$SLACK_CHANNEL_ID\",\"text\":\":error: Tests failed, but results.xml was not found!\"}" \
+             -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+             https://slack.com/api/chat.postMessage
+    fi
+else
+    echo "Tests passed. Skipping Slack notification."
+fi
 
 # Exit with the *original* pytest exit code.
 echo "Exiting with original test code: $TEST_EXIT_CODE"
