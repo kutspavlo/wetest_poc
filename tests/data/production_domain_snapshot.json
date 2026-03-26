@@ -56,8 +56,8 @@
         "https://web.wptglobalpuke34.com"
       ],
       "WEB_API_HEAD": [
-        "https://api.jfwioq.com/",
-        "https://api.pluuus.com/"
+        "https://api.pluuus.com/",
+        "https://api.jfwioq.com/"
       ],
       "MTT_world": [
         "mtt-world.wptglobal.com:2053"
@@ -90,6 +90,9 @@
         ],
         "CIS": [
           "https://landing.akspoker.com"
+        ],
+        "Anjouan": [
+          "https://landing.nexapoker.com"
         ]
       },
       "WEB_IMAGES_DOMAINS": {
