@@ -56,8 +56,7 @@
         "https://web.wptglobalpuke34.com"
       ],
       "WEB_API_HEAD": [
-        "https://api.pluuus.com/",
-        "https://api.jfwioq.com/"
+        "https://api.pluuus.com/"
       ],
       "MTT_world": [
         "mtt-world.wptglobal.com:2053"
@@ -127,6 +126,9 @@
         "wss://pkw-gate-05.wptglobal.com",
         "wss://92smtp.codepurify.com:18002",
         "wss://a92smtp.depucloud.cn:18002"
+      ],
+      "WEB_INTERCOM": [
+        "https://app-web-static-pages-prod.pages.dev/intercom"
       ]
     },
     "baseURL": "https://domains-prod.wptglobal.workers.dev",
