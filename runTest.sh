@@ -23,6 +23,7 @@ echo "Pytest finished with exit code: $TEST_EXIT_CODE"
 
 # --- 5. Uploading Results to Testmo (Conditional) ---
 REPORT_FLAG=$(echo "$EXTRA_INFO" | jq -r .REPORT_TO_TESTMO)
+PUKE_DOMAINS_FLAG=$(echo "$EXTRA_INFO" | jq -r .PUKE_DOMAINS)
 
 PROJECT_ID=7
 if [ "$PUKE_DOMAINS_FLAG" == "true" ]; then
@@ -67,7 +68,7 @@ if [ "$REPORT_FLAG" == "true" ]; then
             --project-id $PROJECT_ID \
             --name "$CASE_FUNC-($(date +'%Y/%m/%d %H:%M'))" \
             --source "WeTest" \
-            --results results.xml \
+            --results results.xml
             --property-map response_body:note domain_url:link:domain_url status_code:field:status_code
 
         UPLOAD_STATUS=$?
@@ -84,7 +85,6 @@ fi
 # --- 6. Slack Notification on Failure ---
 
 # Set your Slack credentials (Ideally move these to Environment Variables)
-PUKE_DOMAINS_FLAG=$(echo "$EXTRA_INFO" | jq -r .PUKE_DOMAINS)
 SLACK_BOT_TOKEN="xoxb-1902914001301-10765586324243-XOLQy6OUiTKUa1beRaEuk59D"
 SLACK_CHANNEL_ID="C0A0H6V5BMK"
 USER_PAV="U09KKKBQJR0"
@@ -112,7 +112,7 @@ if [ "$TEST_EXIT_CODE" -ne 0 ] && [ "$PUKE_DOMAINS_FLAG" = "true" ]; then
 :warning: *Test Run Failed!*
 *Function:* $CASE_FUNC
 *Date:* $(date +'%Y-%m-%d %H:%M')
-*Testmo Results:* https://a5test.testmo.net/automation/runs/7
+*Testmo Results:* https://a5test.testmo.net/automation/runs/12
 
 *Attention:* <@$USER_PAV> <@$USER_VOV> <@$USER_PAT> <@$USER_MUS> <@$USER_RAM>
 EOF
