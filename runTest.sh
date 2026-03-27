@@ -140,7 +140,7 @@ EOF
 elif [ "$TEST_EXIT_CODE" -eq 0 ] && [ "$PUKE_DOMAINS_FLAG" = "true" ]; then
     echo "Tests passed. Sending Success notification to Slack..."
 
-    SUCCESS_TEXT=":white_check_mark: *Test Run Passed!* \n*Function:* $CASE_FUNC \n*Date:* $(date +'%Y-%m-%d %H:%M') \n*Results:* https://a5test.testmo.net/automation/runs/7"
+    SUCCESS_TEXT=":white_check_mark: *Test Run Passed!* \n*Function:* $CASE_FUNC \n*Date:* $(date +'%Y-%m-%d %H:%M') \n*Results:* https://a5test.testmo.net/automation/runs/12"
 
     curl -s -X POST -H 'Content-type: application/json' \
          -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
