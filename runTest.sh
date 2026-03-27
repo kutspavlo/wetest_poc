@@ -24,6 +24,12 @@ echo "Pytest finished with exit code: $TEST_EXIT_CODE"
 # --- 5. Uploading Results to Testmo (Conditional) ---
 REPORT_FLAG=$(echo "$EXTRA_INFO" | jq -r .REPORT_TO_TESTMO)
 
+PROJECT_ID=7
+if [ "$PUKE_DOMAINS_FLAG" == "true" ]; then
+    echo "PUKE_DOMAINS is true. Routing to Testmo project 12."
+    PROJECT_ID=12
+fi
+
 # Check if the UPLOAD_TO_TESTMO flag is set to "true"
 if [ "$REPORT_FLAG" == "true" ]; then
     echo "REPORT_TO_TESTMO flag is 'true'. Proceeding with Testmo upload."
@@ -58,10 +64,10 @@ if [ "$REPORT_FLAG" == "true" ]; then
         echo "Uploading 'results.xml' to Testmo..."
         testmo automation:run:submit \
             --instance https://a5test.testmo.net \
-            --project-id 7 \
+            --project-id $PROJECT_ID \
             --name "$CASE_FUNC-($(date +'%Y/%m/%d %H:%M'))" \
             --source "WeTest" \
-            --results results.xml
+            --results results.xml \
             --property-map response_body:note domain_url:link:domain_url status_code:field:status_code
 
         UPLOAD_STATUS=$?
