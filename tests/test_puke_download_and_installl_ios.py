@@ -1,45 +1,87 @@
+# -*- coding: UTF-8 -*-
+import os
+import time
 import pytest
 from appium import webdriver
-from appium.options.ios import XCUITestOptions
-import time
 
 
-@pytest.mark.login
-def test_user_launch_safari_ios():
-    # WeTest usually maps the WDA port to 8100 locally on the Linux runner
-    wda_url = "http://127.0.0.1:8100"
+# 1. Setup and Teardown using Pytest Fixtures
+@pytest.fixture(scope="function")
+def driver():
+    print('\nSetting up Safari driver for WeTest iOS...')
 
-    # 1. Define Capabilities for a Linux Host (Bypassing Xcode)
-    options = XCUITestOptions()
-    options.platform_name = "iOS"
-    options.browser_name = "Safari"
-    options.device_name = "iPhone"
-    options.new_command_timeout = 600
+    # Fetch WeTest dynamic variables
+    udid = os.getenv("IOS_SERIAL")
+    wda_ip = os.getenv("WDA_SERVER_IP")
+    wda_port = os.getenv("WDA_SERVER_PORT")
 
-    # --- The Magic Flags for Linux / Cloud Execution ---
-    # Tells Appium exactly where WDA is so it skips xcodebuild entirely
-    options.set_capability("webDriverAgentUrl", wda_url)
-    options.set_capability("usePrebuiltWDA", True)
+    # Construct the WDA URL exactly as WeTest requires
+    wda_url = f"http://{wda_ip}:{wda_port}/" if wda_ip and wda_port else None
 
-    # Prevents Appium from trying to use macOS-specific tools for logs
-    options.set_capability("skipLogCapture", True)
+    # Define Capabilities for Safari on Appium 1.22.3
+    desired_caps = {
+        'platformName': 'iOS',
+        'automationName': 'XCUITest',
+        'browserName': 'Safari',
+        'deviceName': 'iOS',
+        'newCommandTimeout': 600,
 
-    # Handle Safari popups
-    options.set_capability("autoAcceptAlerts", True)
+        # Cloud Environment variables injected by WeTest
+        'udid': udid,
 
-    # 2. Connect to Appium Server
-    server_url = "http://127.0.0.1:4723/wd/hub"
+        # Safari-specific capabilities
+        'autoAcceptAlerts': True,
+        'safariInitialUrl': 'about:blank',
+        'safariIgnoreFraudWarning': True
+    }
 
-    print("Connecting to Appium server and launching Safari...")
+    # Inject the pre-built WDA URL to bypass Xcode on Linux runners
+    if wda_url:
+        desired_caps['webDriverAgentUrl'] = wda_url
+        desired_caps['usePrebuiltWDA'] = True
 
-    # Note: Using 'options' instead of 'desired_caps' fixes the DeprecationWarning in your logs
-    driver = webdriver.Remote(command_executor=server_url, options=options)
+    # Connect to Appium 1.x server
+    driver_instance = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps)
 
-    try:
-        driver.get("https://www.google.com")
-        time.sleep(3)
-        assert "Google" in driver.title
-        print("Successfully launched Safari!")
+    # Yield the driver to the test function
+    yield driver_instance
 
-    finally:
-        driver.quit()
+    # TEARDOWN: This code runs after the test completes (pass or fail)
+    print('\nTearing down driver...')
+    driver_instance.quit()
+
+
+# 2. The Test Case
+def test_safari_google_search(driver):
+    """
+    Notice that 'driver' is passed as an argument.
+    Pytest automatically injects the driver from the fixture above.
+    """
+    print('Starting Safari navigation test...')
+
+    # Navigate directly to the URL
+    driver.get("https://www.google.com")
+
+    # Hard wait to allow cloud device network to load the page
+    time.sleep(4)
+
+    # 3. Pytest Assertions use standard Python 'assert'
+    assert "Google" in driver.title, f"Expected 'Google' in title, but got: {driver.title}"
+    print('Successfully validated Safari navigation.')
+
+
+# 4. WeTest XML Reporting Integration
+if __name__ == '__main__':
+    # Fetch the WeTest upload directory (fallback to current folder)
+    upload_dir = os.getenv("UPLOADDIR", ".")
+    report_path = os.path.join(upload_dir, "report.xml")
+
+    print(f"Running pytest and saving XML report to: {report_path}")
+
+    # Run pytest programmatically and output the JUnit XML report WeTest needs
+    pytest.main([
+        "-v",  # Verbose output
+        "-s",  # Allow print statements to show in console
+        f"--junitxml={report_path}",  # Generate the XML report WeTest requires
+        __file__  # Run this specific file
+    ])
