@@ -7,20 +7,15 @@ from appium import webdriver
 
 @pytest.fixture(scope="function")
 def driver():
-    print('\n--- WeTest Environment Variables Debug ---')
-    # This will print to your WeTest logs so we can see EXACTLY what variables they provide
-    for key, value in os.environ.items():
-        if any(x in key.upper() for x in ['IOS', 'WDA', 'UDID', 'DEVICE', 'PORT']):
-            print(f"{key}: {value}")
-    print('------------------------------------------')
-
-    # Fetch WeTest dynamic variables
+    print('\n--- Fetching WeTest Environment ---')
     udid = os.getenv("IOS_SERIAL")
-    wda_ip = os.getenv("WDA_SERVER_IP")
-    wda_port = os.getenv("WDA_SERVER_PORT")
 
-    # We remove the safeguard. If WeTest doesn't provide the IP, we want to know.
-    wda_url = f"http://{wda_ip}:{wda_port}/"
+    # NEW: WeTest now uses 'WDA_HOST' instead of separate IP/Port variables
+    wda_url = os.getenv("WDA_HOST")
+
+    print(f"Target UDID: {udid}")
+    print(f"Target WDA URL: {wda_url}")
+    print('-----------------------------------')
 
     desired_caps = {
         'platformName': 'iOS',
@@ -28,10 +23,9 @@ def driver():
         'deviceName': 'iOS',
         'newCommandTimeout': 600,
 
-        # Treat Safari as a standard Native iOS App to bypass Xcode WebKit checks
+        # Launch Safari natively to bypass Xcode WebKit version checks
         'bundleId': 'com.apple.mobilesafari',
 
-        # Cloud Environment variables injected by WeTest
         'udid': udid,
         'webDriverAgentUrl': wda_url,
         'usePrebuiltWDA': True,
@@ -39,7 +33,7 @@ def driver():
         'autoAcceptAlerts': True
     }
 
-    print(f"\nInitializing driver with WDA URL: {wda_url}")
+    print("Initializing Appium driver...")
     driver_instance = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps)
 
     yield driver_instance
@@ -51,13 +45,12 @@ def driver():
 def test_safari_google_search(driver):
     print('Starting Safari native launch...')
 
-    # Because we used bundleId, Safari launches natively.
-    # We must wait a moment for the app to open.
-    time.sleep(3)
+    # Wait for the app to fully open
+    time.sleep(4)
 
-    print('Available Contexts:', driver.contexts)
+    print(f'Available Contexts: {driver.contexts}')
 
-    # Switch from NATIVE_APP to the WEBVIEW context so we can use standard web commands
+    # We must switch to the WEBVIEW context to interact with the web elements
     webview_context = None
     for context in driver.contexts:
         if 'WEBVIEW' in context:
@@ -68,12 +61,14 @@ def test_safari_google_search(driver):
         print(f"Switching to context: {webview_context}")
         driver.switch_to.context(webview_context)
     else:
-        print("WARNING: Could not find WEBVIEW context. Trying native navigation...")
+        print("WARNING: Could not find WEBVIEW context. Attempting native interaction...")
 
     # Navigate and verify
+    print("Navigating to Google...")
     driver.get("https://www.google.com")
-    time.sleep(4)
+    time.sleep(5)
 
+    # The title check requires the WEBVIEW context to be active
     assert "Google" in driver.title, f"Expected 'Google' in title, but got: {driver.title}"
     print('Successfully validated Safari navigation.')
 
@@ -84,7 +79,7 @@ if __name__ == '__main__':
 
     pytest.main([
         "-v",
-        "-s",  # Crucial: Ensures our print() statements appear in the WeTest console logs
+        "-s",
         f"--junitxml={report_path}",
         __file__
     ])
