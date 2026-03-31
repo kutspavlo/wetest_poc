@@ -3,38 +3,43 @@ import os
 import time
 import pytest
 from appium import webdriver
+from appium.options.ios import XCUITestOptions
 
 
 @pytest.fixture(scope="function")
 def driver():
     print('\n--- Fetching WeTest Environment ---')
     udid = os.getenv("IOS_SERIAL")
-
-    # NEW: WeTest now uses 'WDA_HOST' instead of separate IP/Port variables
     wda_url = os.getenv("WDA_HOST")
 
     print(f"Target UDID: {udid}")
     print(f"Target WDA URL: {wda_url}")
     print('-----------------------------------')
 
-    desired_caps = {
-        'platformName': 'iOS',
-        'automationName': 'XCUITest',
-        'deviceName': 'iOS',
-        'newCommandTimeout': 600,
+    # Use XCUITestOptions instead of desired_caps dictionary
+    options = XCUITestOptions()
+    options.platform_name = 'iOS'
+    options.automation_name = 'XCUITest'
+    options.device_name = 'iOS'
 
-        # Launch Safari natively to bypass Xcode WebKit version checks
-        'bundleId': 'com.apple.mobilesafari',
+    # Let Appium handle the Safari launch natively
+    options.browser_name = 'Safari'
 
-        'udid': udid,
-        'webDriverAgentUrl': wda_url,
-        'usePrebuiltWDA': True,
+    # WeTest Cloud specific capabilities
+    options.udid = udid
+    if wda_url:
+        options.set_capability('webDriverAgentUrl', wda_url)
+        options.set_capability('usePrebuiltWDA', True)
 
-        'autoAcceptAlerts': True
-    }
+    options.new_command_timeout = 600
+    options.auto_accept_alerts = True
+    options.set_capability('safariInitialUrl', 'about:blank')
 
     print("Initializing Appium driver...")
-    driver_instance = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps)
+    driver_instance = webdriver.Remote(
+        command_executor="http://localhost:4723/wd/hub",
+        options=options
+    )
 
     yield driver_instance
 
@@ -43,32 +48,17 @@ def driver():
 
 
 def test_safari_google_search(driver):
-    print('Starting Safari native launch...')
+    # Appium already handles launching Safari and setting the context to WEBVIEW
+    # when 'browserName' is used.
 
-    # Wait for the app to fully open
-    time.sleep(4)
-
-    print(f'Available Contexts: {driver.contexts}')
-
-    # We must switch to the WEBVIEW context to interact with the web elements
-    webview_context = None
-    for context in driver.contexts:
-        if 'WEBVIEW' in context:
-            webview_context = context
-            break
-
-    if webview_context:
-        print(f"Switching to context: {webview_context}")
-        driver.switch_to.context(webview_context)
-    else:
-        print("WARNING: Could not find WEBVIEW context. Attempting native interaction...")
-
-    # Navigate and verify
     print("Navigating to Google...")
     driver.get("https://www.google.com")
+
+    # Allow the cloud device time to load the page over the network
     time.sleep(5)
 
-    # The title check requires the WEBVIEW context to be active
+    print(f"Current Title: {driver.title}")
+
     assert "Google" in driver.title, f"Expected 'Google' in title, but got: {driver.title}"
     print('Successfully validated Safari navigation.')
 
