@@ -1,39 +1,45 @@
 import pytest
 from appium import webdriver
+from appium.options.ios import XCUITestOptions
 import time
 
 
 @pytest.mark.login
 def test_user_launch_safari_ios():
-    # 1. Define Desired Capabilities for Appium 1.22.3
-    # Note: For Safari, we use 'browserName' instead of 'bundleId'
-    desired_caps = {
-        "platformName": "iOS",
-        "automationName": "XCUITest",
-        "browserName": "Safari",
-        "deviceName": '<unknown>',
-        "newCommandTimeout": 600
-    }
+    # WeTest usually maps the WDA port to 8100 locally on the Linux runner
+    wda_url = "http://127.0.0.1:8100"
+
+    # 1. Define Capabilities for a Linux Host (Bypassing Xcode)
+    options = XCUITestOptions()
+    options.platform_name = "iOS"
+    options.browser_name = "Safari"
+    options.device_name = "iPhone"
+    options.new_command_timeout = 600
+
+    # --- The Magic Flags for Linux / Cloud Execution ---
+    # Tells Appium exactly where WDA is so it skips xcodebuild entirely
+    options.set_capability("webDriverAgentUrl", wda_url)
+    options.set_capability("usePrebuiltWDA", True)
+
+    # Prevents Appium from trying to use macOS-specific tools for logs
+    options.set_capability("skipLogCapture", True)
+
+    # Handle Safari popups
+    options.set_capability("autoAcceptAlerts", True)
 
     # 2. Connect to Appium Server
-    # Appium 1.x strictly requires the '/wd/hub' path
     server_url = "http://127.0.0.1:4723/wd/hub"
 
     print("Connecting to Appium server and launching Safari...")
-    driver = webdriver.Remote(server_url, desired_caps)
+
+    # Note: Using 'options' instead of 'desired_caps' fixes the DeprecationWarning in your logs
+    driver = webdriver.Remote(command_executor=server_url, options=options)
 
     try:
-        # 3. Navigate to a URL
-        # The .get() command works natively with browserName: 'Safari'
         driver.get("https://www.google.com")
-
-        # Give the page a moment to load
         time.sleep(3)
-
-        # Verify we are on the right page
         assert "Google" in driver.title
-        print("Successfully launched Safari and navigated to Google.")
+        print("Successfully launched Safari!")
 
     finally:
-        # 4. Clean up
         driver.quit()
