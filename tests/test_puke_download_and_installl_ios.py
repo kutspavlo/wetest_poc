@@ -82,7 +82,15 @@ def test_safari_google_search(driver):
     print("Hitting AppStore Download button...")
     appstore_download_button = driver.find_element(by='accessibility id', value='获取')
     appstore_download_button.click()
-    time.sleep(7)
+    time.sleep(30)
+
+    print("Start Puke App")
+    bundle_id = "com.wptglobal.wptgpuke"
+    # Cold Start
+    driver.terminate_app(bundle_id)
+    # Launch it fresh
+    driver.activate_app(bundle_id)
+    time.sleep(15)
 
 
 if __name__ == '__main__':
