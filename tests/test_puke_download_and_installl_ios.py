@@ -63,12 +63,20 @@ def test_safari_google_search(driver):
     print("Typing URL...")
     # Once clicked, it becomes a text field
     url_field = driver.find_element(by='class name', value='XCUIElementTypeTextField')
-    url_field.send_keys("https://landing.koh2de.com/zh-CN/invite-bonus-zh-hans-cn?referralCode=UQP1PH")
+    url_field.send_keys("https://www.google.com")
     time.sleep(1)
 
-    print("Hitting Download button...")
+    print("Hitting Go/Enter...")
     # Click the "Go" button on the iOS keyboard
+    download_button = driver.find_element(by='name', value='Go').click()
+
+    # Wait for page to load
+    print("Waiting for page load...")
+    time.sleep(6)
+
+    print("Hitting Download button...")
     download_button = driver.find_element(by='accessibility id', value='下载 WPT Global Puke')
+    download_button.click()
 
 
 if __name__ == '__main__':
