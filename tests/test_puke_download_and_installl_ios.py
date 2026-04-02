@@ -63,7 +63,7 @@ def test_safari_google_search(driver):
     print("Typing URL...")
     # Once clicked, it becomes a text field
     url_field = driver.find_element(by='class name', value='XCUIElementTypeTextField')
-    url_field.send_keys("https://www.google.com")
+    url_field.send_keys("https://landing.koh2de.com/zh-CN/invite-bonus-zh-hans-cn?referralCode=UQP1PH")
     time.sleep(1)
 
     print("Hitting Go/Enter...")
