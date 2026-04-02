@@ -84,11 +84,21 @@ def test_safari_google_search(driver):
     appstore_download_button.click()
     time.sleep(30)
 
-    print("Start Puke App")
+    print("Waiting for installation to complete via App State...")
     bundle_id = "com.wptglobal.wptgpuke"
-    # Cold Start
+    timeout = 180  # Max wait time in seconds
+    poll_interval = 5
+    elapsed_time = 0
+
+    # Loop until the app state is no longer 0 (Not Installed)
+    while driver.query_app_state(bundle_id) == 0:
+        if elapsed_time >= timeout:
+            raise Exception(f"App {bundle_id} failed to install within {timeout} seconds.")
+        time.sleep(poll_interval)
+        elapsed_time += poll_interval
+
+    print("Install finished! Starting Puke App...")
     driver.terminate_app(bundle_id)
-    # Launch it fresh
     driver.activate_app(bundle_id)
     time.sleep(15)
 
