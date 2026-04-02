@@ -68,7 +68,7 @@ def test_safari_google_search(driver):
 
     print("Hitting Go/Enter...")
     # Click the "Go" button on the iOS keyboard
-    download_button = driver.find_element(by='name', value='Go').click()
+    driver.find_element(by='name', value='Go').click()
 
     # Wait for page to load
     print("Waiting for page load...")
@@ -77,6 +77,12 @@ def test_safari_google_search(driver):
     print("Hitting Download button...")
     download_button = driver.find_element(by='accessibility id', value='下载 WPT Global Puke')
     download_button.click()
+    time.sleep(7)
+
+    print("Hitting AppStore Download button...")
+    appstore_download_button = driver.find_element(by='accessibility id', value='获取')
+    appstore_download_button.click()
+    time.sleep(7)
 
 
 if __name__ == '__main__':
