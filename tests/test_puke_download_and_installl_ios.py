@@ -63,29 +63,12 @@ def test_safari_google_search(driver):
     print("Typing URL...")
     # Once clicked, it becomes a text field
     url_field = driver.find_element(by='class name', value='XCUIElementTypeTextField')
-    url_field.send_keys("https://www.google.com")
+    url_field.send_keys("https://landing.koh2de.com/zh-CN/invite-bonus-zh-hans-cn?referralCode=UQP1PH")
     time.sleep(1)
 
-    print("Hitting Go/Enter...")
+    print("Hitting Download button...")
     # Click the "Go" button on the iOS keyboard
-    driver.find_element(by='name', value='Go').click()
-
-    # Wait for page to load
-    print("Waiting for page load...")
-    time.sleep(6)
-
-    # Since we can't use driver.title, we look for a native UI element that proves Google loaded
-    print("Verifying page loaded natively...")
-    # The Safari URL bar changes its value to the current domain
-    try:
-        # Check if the URL bar contains "google"
-        address_bar = driver.find_element(by='name', value='Address')
-        assert "google" in address_bar.text.lower(), f"Expected 'google' in address bar, got: {address_bar.text}"
-        print("Success: Google loaded correctly!")
-    except:
-        print("Could not find address bar by text. Attempting alternative validation.")
-        # Alternative: Just ensure the driver didn't crash
-        assert True
+    download_button = driver.find_element(by='accessibility id', value='下载 WPT Global Puke')
 
 
 if __name__ == '__main__':
