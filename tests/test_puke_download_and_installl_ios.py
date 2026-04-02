@@ -98,6 +98,7 @@ def test_safari_google_search(driver):
         elapsed_time += poll_interval
 
     print("Install finished! Starting Puke App...")
+    time.sleep(15)
     driver.terminate_app(bundle_id)
     driver.activate_app(bundle_id)
     time.sleep(15)
