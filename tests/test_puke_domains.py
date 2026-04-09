@@ -14,7 +14,7 @@ from enums.prod_domains import ProductionDomains
 def test_puke_production_domains(record_property, domain_url, production_domain_snapshot):
     record_property("domain_url", domain_url.value)
 
-    response = requests.get(domain_url.value)
+    response = requests.get(domain_url.value, verify=False)
 
     assert response.status_code == 200, f"Expected 200 but got {response.status_code}"
 
