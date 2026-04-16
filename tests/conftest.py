@@ -66,6 +66,6 @@ def get_device_os():
 
 @pytest.fixture(scope="session")
 def production_domain_snapshot():
-    response = requests.get(ProductionDomains.MAIN_PRIMARY.value)
+    response = requests.get(ProductionDomains.MAIN_PRIMARY.value, verify=False)
     response_data = response.json()
     return response_data
