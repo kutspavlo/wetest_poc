@@ -3,4 +3,3 @@ airtest
 pocoui
 pytest
 Appium-Python-Client
-opencv-contrib-python-headless==4.6.0.66

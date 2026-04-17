@@ -10,6 +10,7 @@ echo "Using system Python 3..."
 echo "--- Installing Dependencies ---"
 python3 -m pip install --upgrade pip
 python3 -m pip install --default-timeout=1000 --retries 5 -r requirements.txt || { echo "ERROR: Failed to install dependencies"; exit 1; }
+pip install opencv-contrib-python-headless==4.6.0.66 --force-reinstall
 echo "Python dependencies installed."
 echo "--- Installing jq... ---"
 apt-get update && apt-get install -y jq libgl1

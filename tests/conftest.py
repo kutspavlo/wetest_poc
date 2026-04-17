@@ -1,6 +1,3 @@
-import json
-from pathlib import Path
-
 import pytest
 import requests
 from airtest.core.api import device, connect_device
