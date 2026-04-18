@@ -62,7 +62,14 @@ def get_device_os():
 
 
 @pytest.fixture(scope="session")
-def production_domain_snapshot():
+def main_production_domain_snapshot():
     response = requests.get(ProductionDomains.MAIN_PRIMARY.value, verify=False)
+    response_data = response.json()
+    return response_data
+
+
+@pytest.fixture(scope="session")
+def backup_production_domain_snapshot():
+    response = requests.get(ProductionDomains.BACKUP_PRIMARY.value, verify=False)
     response_data = response.json()
     return response_data

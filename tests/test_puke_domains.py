@@ -11,8 +11,13 @@ from enums.prod_domains import ProductionDomains
     ProductionDomains.BACKUP_SECONDARY
 
 ])
-def test_puke_production_domains(record_property, domain_url, production_domain_snapshot):
+def test_puke_production_domains(record_property, domain_url, main_production_domain_snapshot,
+                                 backup_production_domain_snapshot):
     record_property("domain_url", domain_url.value)
+
+    snapshot = main_production_domain_snapshot
+    if domain_url in [ProductionDomains.BACKUP_PRIMARY, ProductionDomains.BACKUP_SECONDARY]:
+        snapshot = backup_production_domain_snapshot
 
     response = requests.get(domain_url.value, verify=False)
 
@@ -22,7 +27,7 @@ def test_puke_production_domains(record_property, domain_url, production_domain_
     record_property("status_code", response.status_code)
     record_property("response_body", response_data)
     actual_proxies = response_data["config"]["proxies"]
-    expected_proxies = production_domain_snapshot["config"]["proxies"]
+    expected_proxies = snapshot["config"]["proxies"]
 
     for key, expected_value in expected_proxies.items():
         actual_value = actual_proxies.get(key)
